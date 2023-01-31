@@ -37,7 +37,7 @@ LRESULT __stdcall KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
             TCHAR* executableName = PathFindFileName(fileName);
 
             // Compare the application name, and skip execution if the image is Linear or Notion
-            if (_tcscmp(_T("Linear.exe"), executableName) == 0 || _tcscmp(_T("Notion.exe"), executableName) == 0, _tcscmp(_T("brave.exe"), executableName) == 0)
+            if (_tcscmp(_T("Linear.exe"), executableName) == 0 || _tcscmp(_T("Notion.exe"), executableName) == 0 ||  _tcscmp(_T("brave.exe"), executableName) == 0)
             {
 
                 std::cout << "Ctrl + K pressed (no action)" << std::endl;
