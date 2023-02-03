@@ -9,11 +9,18 @@
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
 
+// keyboard hooks
 HHOOK hHook = NULL;
 KBDLLHOOKSTRUCT kbdStruct;
 
+// window stuff
+NOTIFYICONDATA nid;
+HWND hwnd;
 
-
+// Function Declarations
+void InitNotifyIconData();
+void RegisterClass();
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 LRESULT __stdcall KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -50,10 +57,20 @@ LRESULT __stdcall KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
                 return CallNextHookEx(hHook, nCode, wParam, lParam);
             }
 
+            // If our window is already in foreground, hide it
+            if (hWnd == hwnd) {
+                ShowWindow(hwnd, SW_HIDE);
+                return CallNextHookEx(hHook, nCode, wParam, lParam);
+
+            }
+
             // Your code here to handle the keyboard event
 
             std::cout << "Ctrl + K pressed" << std::endl;
             std::wcout << "Image name: " << executableName << std::endl;
+            ShowWindow(hwnd, SW_RESTORE);
+            SetForegroundWindow(hwnd);
+
         }
         else if (wParam == WM_KEYDOWN && (GetAsyncKeyState(VK_CONTROL) & 0x8000) && kbdStruct.vkCode == 'C')
         {
@@ -104,13 +121,7 @@ LRESULT __stdcall KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 
 // Global Variables
-NOTIFYICONDATA nid;
-HWND hwnd;
 
-// Function Declarations
-void InitNotifyIconData();
-void RegisterClass();
-LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
